@@ -21,8 +21,7 @@ def ffind(string, fstr):
 	else: 
 		return -1
 def fsearch(path, search_string, type, dosdevices=False, PlayOnLinux=False, wine=False):
-	print('"{}" alt dizininde "{}" kelimesini içeren dosyalar listeleniyor. Lütfen bekleyiniz'
-	     ).format(path, search_string)
+	print (path +''+ ' alt dizininde ' +search_string+' '+'kelimesini içeren dosyalar listeleniyor. Lütfen bekleyiniz')
 	if dosdevices is False: 
 		dosdevices = -1 
 	if PlayOnLinux is False: 
