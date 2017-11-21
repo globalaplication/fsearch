@@ -47,4 +47,4 @@ def fsearch(path, search_text, type, dosdevices=False, PlayOnLinux=False, wine=F
 		except:
 			pass
 
-fsearch('/home', 'hello', '.py .txt', False, False, False)
+fsearch('/home', 'search word', '.py .txt', False, False, False)
