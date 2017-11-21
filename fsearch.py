@@ -40,8 +40,7 @@ def fsearch(path, search_string, type, dosdevices=False, PlayOnLinux=False, wine
 				path+'/'+select for select in list 
 				if folder_test(path+'/'+select) is 1 if ffind(path, '/dosdevices/') is dosdevices 
 				if ffind(path, 'PlayOnLinux') is PlayOnLinux 
-				if ffind(path, '/.wine') is wine
-														]
+				if ffind(path, '/.wine') is wine]
 		dir_list.extend(select)
 		for select in select:
 			for beta in os.listdir(select):
