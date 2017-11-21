@@ -3,7 +3,8 @@
 import os
 def folder_test(path):
 	try:
-		if len(os.listdir(path)) >= 0: return 1
+		if len(os.listdir(path)) >= 0: 
+			return 1
 	except:
 		return -1
 def text_search(file, text):
