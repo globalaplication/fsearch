@@ -8,7 +8,6 @@ def folder_test(path):
 		if len(os.listdir(path)) >= 0: return 1
 	except:
 		return -1
-
 def text_search(file, text):
 	try:
 		file = open(file)
@@ -18,7 +17,6 @@ def text_search(file, text):
 			return 1
 	except:
 		pass
-
 def fsearch(path, search_string, type, dosdevices=False, PlayOnLinux=False, wine=False):
 
 	print('Lütfen bekleyiniz...')
