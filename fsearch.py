@@ -1,48 +1,50 @@
 # -*- coding: utf-8 -*-
 #!/usr/bin/env python3
-import os
-def folder_test(path):
-	try:
-		if len(os.listdir(path)) >= 0: 
-			return 1
-	except:
-		return -1
-def text_search(file, text):
+
+def search_in_source(file, text):
 	try:
 		file = open(file)
 		source = file.read()
 		file.close()
-		if source.find(text) is not -1: return 1
+		if source.find(text) is not -1: 
+			return 1
+		else: return -1
 	except:
 		pass
-def ffind(string, fstr):
-	if string.find(fstr) is not -1:
-		return 1 
-	else: 
-		return -1
-def fsearch(path, search_string, type, dosdevices=False, PlayOnLinux=False, wine=False):
-	print (path +''+ ' alt dizininde ' +search_string+' '+'kelimesini içeren dosyalar listeleniyor. Lütfen bekleyiniz')
-	if dosdevices is False: 
-		dosdevices = -1 
-	if PlayOnLinux is False: 
-		PlayOnLinux = -1
-	if wine is False: 
-		wine = -1
-	dir_list = [path]
-	for path in dir_list:
-		list = os.listdir(path)
-		select = [
-				path+'/'+select for select in list 
-				if folder_test(path+'/'+select) is 1 if ffind(path, '/dosdevices/') is dosdevices 
-				if ffind(path, 'PlayOnLinux') is PlayOnLinux 
-				if ffind(path, '/.wine') is wine
-				if ffind(path, '/proc') is -1 ]
-		dir_list.extend(select)
-		for select in select:
-			for beta in os.listdir(select):
-				for fextention in type.split():
-					if str(select+'/'+beta).find(fextention) is not -1 and text_search(select+'/'+beta, search_string) is 1:
-						print (select+'/'+beta)
-						
-fsearch('/home', 'arama yapılan kelime', '.txt .py', False, False, False)
-#fsearch('/', 'arama yapılan kelime', '.txt .py .cpp')
+	
+def fsearch(path, search_text, type, dosdevices=False, PlayOnLinux=False, wine=False):
+	import os
+	if dosdevices is False: dosdevices = -1 
+	elif dosdevices is True:
+		dosdevices = 1
+	if PlayOnLinux is False: PlayOnLinux = -1 
+	elif PlayOnLinux is True:
+		PlayOnLinux = 1
+	if wine is False: wine = -1 
+	elif wine is True:
+		wine = 1
+
+	liste = os.listdir(path)
+
+	folder = [str(path+'/'+folder).replace('//','/') for folder in liste if os.path.isdir(path+'/'+folder) is True]
+
+	for f in folder:
+		try:
+			select = [(f+'/'+select) for select in os.listdir(f) 
+					if os.path.isdir(f+'/'+select) is True
+					if str(f+'/'+select).find('/dosdevices') is -1
+					if str(f+'/'+select).find('/.PlayOnLinux') is -1
+					if str(f+'/'+select).find('/PlayOnLinux') is -1
+					if str(f+'/'+select).find('/.wine') is -1]
+
+			folder.extend(select)
+
+			for select in select:
+
+				for test in os.listdir(select):
+					if str(select+'/'+test)[str(select+'/'+test).find('.'):] in type.split() and search_in_source(select+'/'+test, search_text) is 1:
+						print(select+'/'+test)
+		except:
+			pass
+
+fsearch('/home', 'hello', '.py .txt', False, False, False)
