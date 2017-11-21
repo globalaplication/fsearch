@@ -12,7 +12,7 @@ def search_in_source(file, text):
 	except:
 		pass
 	
-def fsearch(path, search_text, type, dosdevices=False, PlayOnLinux=False, wine=False):
+def fsearch(path, search_text, extention, dosdevices=False, PlayOnLinux=False, wine=False):
 	import os
 	if dosdevices is False: dosdevices = -1 
 	elif dosdevices is True:
@@ -42,7 +42,7 @@ def fsearch(path, search_text, type, dosdevices=False, PlayOnLinux=False, wine=F
 			for select in select:
 
 				for test in os.listdir(select):
-					if str(select+'/'+test)[str(select+'/'+test).find('.'):] in type.split() and search_in_source(select+'/'+test, search_text) is 1:
+					if str(select+'/'+test)[str(select+'/'+test).find('.'):] in extention.split() and search_in_source(select+'/'+test, search_text) is 1:
 						print(select+'/'+test)
 		except:
 			pass
