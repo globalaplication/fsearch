@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import os
 def folder_test(path):
 	try:
@@ -11,8 +11,7 @@ def text_search(file, text):
 		file = open(file)
 		source = file.read()
 		file.close()
-		if source.find(text) is not -1:
-			return 1
+		if source.find(text) is not -1: return 1
 	except:
 		pass
 def ffind(string, fstr):
@@ -21,7 +20,7 @@ def ffind(string, fstr):
 	else: 
 		return -1
 def fsearch(path, search_string, type, dosdevices=False, PlayOnLinux=False, wine=False):
-	print('Lütfen bekleyiniz...')
+	print('{} alt dizinlerinde {} kelimesini içeren dosyalar listeleniyor. Lütfen bekleyiniz').format(path, search_string)
 	if dosdevices is False: 
 		dosdevices = -1 
 	if PlayOnLinux is False: 
