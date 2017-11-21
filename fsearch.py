@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 #!/usr/bin/env python3
-
 import os
-
 def folder_test(path):
 	try:
 		if len(os.listdir(path)) >= 0: return 1
@@ -18,7 +16,6 @@ def text_search(file, text):
 	except:
 		pass
 def fsearch(path, search_string, type, dosdevices=False, PlayOnLinux=False, wine=False):
-
 	print('Lütfen bekleyiniz...')
 
 	if dosdevices is False: dosdevices = -1
