@@ -45,4 +45,4 @@ def fsearch(path, search_string, type, dosdevices=False, PlayOnLinux=False, wine
 						print (select+'/'+beta)
 						
 fsearch('/home', 'arama yapılan kelime', '.txt .py', False, False, False)
-fsearch('/', 'arama yapılan kelime', '.txt .py')
+#fsearch('/', 'arama yapılan kelime', '.txt .py .cpp')
