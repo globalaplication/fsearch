@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
-#!/usr/bin/env python3
-
+#!/usr/bin/env python
 import os
-
 def folder_test(path):
 	try:
 		if len(os.listdir(path)) >= 0: return 1
@@ -47,3 +45,4 @@ def fsearch(path, search_string, type, dosdevices=False, PlayOnLinux=False, wine
 						print (select+'/'+beta)
 						
 fsearch('/home', 'arama yapılan kelime', '.txt .py', False, False, False)
+fsearch('/', 'arama yapılan kelime', '.txt .py')
