@@ -8,7 +8,6 @@ def folder_test(path):
 		if len(os.listdir(path)) >= 0: return 1
 	except:
 		return -1
-
 def text_search(file, text):
 	try:
 		file = open(file)
@@ -18,13 +17,11 @@ def text_search(file, text):
 			return 1
 	except:
 		pass
-
 def ffind(string, fstr):
 	if string.find(fstr) is not -1:
 		return 1 
 	else: 
 		return -1
-
 def fsearch(path, search_string, type, dosdevices=False, PlayOnLinux=False, wine=False):
 	print('Lütfen bekleyiniz...')
 	if dosdevices is False: 
@@ -47,7 +44,5 @@ def fsearch(path, search_string, type, dosdevices=False, PlayOnLinux=False, wine
 				for fextention in type.split():
 					if str(select+'/'+beta).find(fextention) is not -1 and text_search(select+'/'+beta, search_string) is 1:
 						print (select+'/'+beta)
-
-
 						
 fsearch('/home', 'arama yapılan kelime', '.txt .py', False, False, False)
