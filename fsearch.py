@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 #!/usr/bin/env python3
-
 def search_in_source(file, text):
 	try:
 		file = open(file)
@@ -11,7 +10,6 @@ def search_in_source(file, text):
 		else: return -1
 	except:
 		pass
-	
 def fsearch(path, search_text, extention, dosdevices=False, PlayOnLinux=False, wine=False):
 	import os
 	if dosdevices is False: dosdevices = -1 
@@ -23,11 +21,8 @@ def fsearch(path, search_text, extention, dosdevices=False, PlayOnLinux=False, w
 	if wine is False: wine = -1 
 	elif wine is True:
 		wine = 1
-
 	liste = os.listdir(path)
-
 	folder = [str(path+'/'+folder).replace('//','/') for folder in liste if os.path.isdir(path+'/'+folder) is True]
-
 	for f in folder:
 		try:
 			select = [(f+'/'+select) for select in os.listdir(f) 
