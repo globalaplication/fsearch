@@ -5,6 +5,7 @@ def search_in_source(file, text):
 		file = open(file)
 		source = file.read()
 		file.close()
+		
 		if source.find(text) is not -1: 
 			return 1
 		else: return -1
