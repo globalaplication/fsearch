@@ -4,6 +4,7 @@ def execute(beta):
     global table, database 
     command = beta.replace('(', ' ( ').replace(')', ' ) ')
     command = command.split()
+    print(command)
     if (command[0:2] == ['CREATE', 'TABLE']):
         table = command[2]
         string, strnewrows, strnewtype  = ('table:'+table, '', '')
@@ -55,11 +56,12 @@ def connect(beta):
         file = open(beta)
         database = file.read()
         file.close()
-        if len(database) is not 0:
-            getTableInfo = database.split('\n')[0:database.split('\n').index('end:info:table')]
+    if len(database) is not 0:
+       getTableInfo = database.split('\n')[0:database.split('\n').index('end:info:table')]
 
 connect('database.mmsql')
-execute('CREATE TABLE database (isim:Text soyadi:Text)')
+#execute('CREATE TABLE database (isim:Text soyadi:Text)')
+
 
 #print(getRows('deneme'))
 #print(getTypes('deneme'))
