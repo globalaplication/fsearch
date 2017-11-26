@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 #!/usr/bin/env python3
+
 def execute(beta):
     global table, database 
     command = beta.replace('(', ' ( ').replace(')', ' ) ')
@@ -7,7 +8,6 @@ def execute(beta):
     if (command[0:2] == ['CREATE', 'TABLE']):
         table = command[2]
         string, strnewrows, strnewtype  = ('table:'+table, '', '')
-
         if database.find(string+':') is -1:
             for frowtype in command:
                 if (frowtype is '('):
@@ -16,9 +16,11 @@ def execute(beta):
                 strnewrows = strnewrows + fnewrows + ' '
             for fnewtypes in newrowtype[1].split(':'):
                 strnewtype = strnewtype + fnewtypes + ' '
+            if len(database) is 0: end = 'end:info:table'
+            else: end = ''
             createnewrows = string+':rows:'+ strnewrows+'\n'
             createnewtypes = string+':types:'+strnewtype+'\n'+string+':count:0'+'\n'+database
-            database = createnewrows+createnewtypes+'end:info:table'
+            database = createnewrows+createnewtypes+end
         else:
             print('tablo kayıtlı')
     update()
