@@ -8,9 +8,7 @@ def execute(beta):
     if (command[0:2] == ['CREATE', 'TABLE']):
         table = command[2]
         string, strnewrows, strnewtype  = ('table:'+table, '', '')
-        if os.path.lexists(n) is False:
-            getTableInfo = 1
-            database = 'table:mmsql:rows:id\n'+'table:mmsql:types:ID\n'+'table:mmsql:count:0\n'+'end:info:table'
+
         if database.find(string+':') is -1:
             for frowtype in command:
                 if (frowtype is '('):
@@ -21,11 +19,12 @@ def execute(beta):
                 strnewtype = strnewtype + fnewtypes + ' '
             createnewrows = string+':rows:'+ strnewrows+'\n'
             createnewtypes = string+':types:'+strnewtype+'\n'+string+':count:0'+'\n'+database
-            database = createnewrows+createnewtypes
-
-            update()
+            database = createnewrows+createnewtypes+'end:info:table'
         else:
             print('tablo kayıtlı')
+            
+    update()
+
 def update():
     db = open(n, 'w')
     db.write(database)
@@ -53,12 +52,11 @@ def connect(beta):
     global getTableInfo
     global database, n
     n = beta
-
-    file = open(beta)
-    database = file.read()
-    file.close()
-
+    database = ''
     if os.path.lexists(beta) is True:
+        file = open(beta)
+        database = file.read()
+        file.close()
         if len(database) is not 0:
             getTableInfo = database.split('\n')[0:database.split('\n').index('end:info:table')]
 
