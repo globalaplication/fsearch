@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 #!/usr/bin/env python3
-
 def execute(beta):
     global table, database 
     command = beta.replace('(', ' ( ').replace(')', ' ) ')
@@ -22,9 +21,7 @@ def execute(beta):
             database = createnewrows+createnewtypes+'end:info:table'
         else:
             print('tablo kayıtlı')
-            
     update()
-
 def update():
     db = open(n, 'w')
     db.write(database)
