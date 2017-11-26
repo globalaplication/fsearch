@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 #!/usr/bin/env python3
-
 def execute(beta):
     global table, database 
     command = beta.replace('(', ' ( ').replace(')', ' ) ')
