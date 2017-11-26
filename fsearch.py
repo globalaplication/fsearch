@@ -1,46 +1,70 @@
 # -*- coding: utf-8 -*-
 #!/usr/bin/env python3
-def search_in_source(file, text):
-	try:
-		file = open(file)
-		source = file.read()
-		file.close()
-		
-		if source.find(text) is not -1: 
-			return 1
-		else: return -1
-	except:
-		pass
-def fsearch(path, search_text, extention, dosdevices=False, PlayOnLinux=False, wine=False):
-	import os
-	if dosdevices is False: dosdevices = -1 
-	elif dosdevices is True:
-		dosdevices = 1
-	if PlayOnLinux is False: PlayOnLinux = -1 
-	elif PlayOnLinux is True:
-		PlayOnLinux = 1
-	if wine is False: wine = -1 
-	elif wine is True:
-		wine = 1
-	liste = os.listdir(path)
-	folder = [str(path+'/'+folder).replace('//','/') for folder in liste if os.path.isdir(path+'/'+folder) is True]
-	for f in folder:
-		try:
-			select = [(f+'/'+select) for select in os.listdir(f) 
-					if os.path.isdir(f+'/'+select) is True
-					if str(f+'/'+select).find('/dosdevices') is -1
-					if str(f+'/'+select).find('/.PlayOnLinux') is -1
-					if str(f+'/'+select).find('/PlayOnLinux') is -1
-					if str(f+'/'+select).find('/.wine') is -1]
 
-			folder.extend(select)
+def execute(beta):
+    global table, database 
+    command = beta.replace('(', ' ( ').replace(')', ' ) ')
+    command = command.split()
+    if (command[0:2] == ['CREATE', 'TABLE']):
+        table = command[2]
+        string, strnewrows, strnewtype  = ('table:'+table, '', '')
+        if os.path.lexists(n) is False:
+            getTableInfo = 1
+            database = 'table:mmsql:rows:id\n'+'table:mmsql:types:ID\n'+'table:mmsql:count:0\n'+'end:info:table'
+        if database.find(string+':') is -1:
+            for frowtype in command:
+                if (frowtype is '('):
+                    newrowtype = command[command.index(frowtype)+1:-1]
+            for fnewrows in newrowtype[0].split(':'):
+                strnewrows = strnewrows + fnewrows + ' '
+            for fnewtypes in newrowtype[1].split(':'):
+                strnewtype = strnewtype + fnewtypes + ' '
+            createnewrows = string+':rows:'+ strnewrows+'\n'
+            createnewtypes = string+':types:'+strnewtype+'\n'+string+':count:0'+'\n'+database
+            database = createnewrows+createnewtypes
 
-			for select in select:
+            update()
+        else:
+            print('tablo kayıtlı')
+def update():
+    db = open(n, 'w')
+    db.write(database)
+    db.close()
+def getTableCount(table):
+    table = str(table)
+    string = 'table:'+table
+    count = [count for count in getTableInfo if count.startswith(string+':count:') is True]
+    if len(count) is not 0:
+        return int(count[-1][len(string+':count:'):].split()[-1])
+def getRows(table):
+    table = str(table)
+    string = 'table:'+table
+    Rows = [Rows for Rows in getTableInfo if Rows.startswith(string+':rows:') is True]
+    if len(Rows) is not 0:
+        return str(Rows[-1][len(string+':rows:'):].split()) #-1:0
+def getTypes(table):
+    table = str(table)
+    string = 'table:'+table
+    type = [type for type in getTableInfo if type.startswith(string+':types:') is True]
+    if len(type) is not 0:
+        return str(type[-1][len(string+':types:'):].split())
+def connect(beta):
+    import os
+    global getTableInfo
+    global database, n
+    n = beta
 
-				for test in os.listdir(select):
-					if str(select+'/'+test)[str(select+'/'+test).find('.'):] in extention.split() and search_in_source(select+'/'+test, search_text) is 1:
-						print(select+'/'+test)
-		except:
-			pass
+    file = open(beta)
+    database = file.read()
+    file.close()
 
-fsearch('/home', 'search word', '.py .txt', False, False, False)
+    if os.path.lexists(beta) is True:
+        if len(database) is not 0:
+            getTableInfo = database.split('\n')[0:database.split('\n').index('end:info:table')]
+
+connect('database.mmsql')
+execute('CREATE TABLE database (isim:Text soyadi:Text)')
+
+#print(getRows('deneme'))
+#print(getTypes('deneme'))
+#print(getTableCount('deneme'))
