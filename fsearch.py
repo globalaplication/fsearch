@@ -7,7 +7,7 @@ def execute(beta, *VALUES):
     for keys in REpL.keys():
         beta = beta.replace(keys, REpL[keys])
     command = beta.split()
-    NOT, PNOT, ROWS, PROWS = [], [], [], []
+    NOT, PNOT, TFNOT, ROWS, PROWS = [], [], [], [], []
     global table
     global database
     if 'NOT' in command:
@@ -43,26 +43,35 @@ def execute(beta, *VALUES):
                 end = ''
             createnewrows = string+':rows:'+ strnewrows+'\n'
             createnewtypes = string+':types:'+strnewtypes+'\n'+string+':count:0'+'\n'+database
-            database = createnewrows + createnewtypes + end
+            database = createnewrows + createnewtypes + end 
             update()
         else:
             print(table, 'tablo kayitli')
     if (command[0:2] == ['INSERT', 'INTO']):
         DatabaseGetCount = TableGetCount(table)
-        table = 'table:' + table
         for insert in ROWS:
             if len(ROWS) is len(VALUES):
-                start  = table + ':' + insert + ':' + str(DatabaseGetCount+1)
+                start  = 'table:' + table + ':' + insert + ':' + str(DatabaseGetCount+1)
                 end = VALUES[ROWS.index(insert)] + '\nend'
                 database = database + '\n' + start +'\n'+ end
             else:
                 print('hatalı kullanım')
                 break
+        #database = database + '\ntable:mmsql:id:1:hide'
         if len(ROWS) is len(VALUES):
-            start = table +':count:' + str(DatabaseGetCount)
-            end = table +':count:' + str(DatabaseGetCount+1)
+            start = 'table:' + table +':count:' + str(DatabaseGetCount)
+            end = 'table:' + table +':count:' + str(DatabaseGetCount+1)
             database = database.replace(start, end)
+            if len(NOT) > 0 and NOT[0] not in ROWS:
+                print('hatalı kullanım', NOT, ROWS)
+            else:
+                for id in range(1, TableGetCount(table)+1):
+                    if len(NOT) > 0 and VALUES[ROWS.index(NOT[0])] in GetColumn('mmsql', id)[ROWS.index(NOT[0])]:
+                        TFNOT.append(1)
+        if (len(TFNOT) is 0):
             update()
+        else:
+            print('daha eskiden kaydedilmis data')
 def update():
     global n
     db = open(n, 'w')
@@ -112,5 +121,4 @@ def GetColumn(table, id):
     return gets
 connect('database.mmsql')
 execute('CREATE TABLE  school ( isim:Text soyadi:Text )')
-execute('INSERT INTO mmsql ROWS (isim, soyadi) ', 'python', 'programlama')
-#print(GetColumn('mmsql', 1))
+execute('INSERT INTO mmsql ROWS (isim, soyadi) NOT (isim)', 'c+', 'programlama')
