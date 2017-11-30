@@ -49,7 +49,6 @@ def execute(beta, *VALUES):
             print(table, 'tablo kayitli')
     if (command[0:2] == ['INSERT', 'INTO']):
         DatabaseGetCount = TableGetCount(table)
-       
         for insert in ROWS:
             if len(ROWS) is len(VALUES):
                 start  = 'table:' + table + ':' + insert + ':' + str(DatabaseGetCount+1)
@@ -58,7 +57,6 @@ def execute(beta, *VALUES):
             else:
                 print('hatalı kullanım')
                 break
-        #database = database + '\ntable:mmsql:id:1:hide'
         if len(ROWS) is len(VALUES):
             start = 'table:' + table +':count:' + str(DatabaseGetCount)
             end = 'table:' + table +':count:' + str(DatabaseGetCount+1)
@@ -73,7 +71,6 @@ def execute(beta, *VALUES):
             update()
         else:
             print('daha eskiden kaydedilmis data')
-
 def update():
     global n
     db = open(n, 'w')
@@ -97,6 +94,12 @@ def TableGetTypes(table):
     type = [type for type in getAllTable if type.startswith(string+':types:')]
     if len(type) is not 0:
         return str(type[-1][len(string+':types:'):].split())
+def DELETE_ID_(table, id):
+    global database
+    id, table = str(id), str(table)
+    if database.find(table + ':' + 'id' + ':' + id + ':hide') is -1:
+        database = database + '\n' + table + ':' + 'id' + ':' + id + ':hide'
+        update()
 def connect(beta):
     import os
     global getAllTable, database, n
@@ -123,4 +126,6 @@ def GetColumn(table, id):
     return gets
 connect('database.mmsql')
 execute('CREATE TABLE  mmsql ( isim:Text soyadi:Text )')
-execute('INSERT INTO mmsql ROWS (isim, soyadi) NOT (isim)', 'c+', 'programlama')
+#execute('INSERT INTO mmsql ROWS (isim, soyadi) NOT (isim)', 'python', 'lorke')
+
+DELETE_ID_('mmsql', 1)
