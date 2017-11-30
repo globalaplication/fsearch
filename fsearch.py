@@ -74,14 +74,17 @@ def execute(beta, *VALUES):
                 print('hatalı kullanım', NOT, ROWS)
             else:
                 for id in range(1, TableGetCount(table)+1):
-                    if len(NOT) > 0 and VALUES[ROWS.index(NOT[0])] in GetColumn('mmsql', id)[ROWS.index(NOT[0])]:
+                    if len(NOT) > 0 and VALUES[ROWS.index(NOT[0])] in GetColumn(table, id)[ROWS.index(NOT[0])]:
                         TFNOT.append(1)
         if (len(TFNOT) is 0):
             update()
         else:
             print('daha eskiden kaydedilmis data')
     if (command[0:3] == ['SELECT', '*', 'FROM']):
-        start, end = VALUES[0], VALUES[1]
+        if len(VALUES) is not 0:
+            start, end = VALUES[0], VALUES[1]
+        if len(VALUES) is 0:
+            start, end = 1, TableGetCount(table)
         if len(SORT) is 0:
             select = [GetColumn(table, select) for select in range(start, end+1)]
             return select
@@ -137,16 +140,19 @@ def GetColumn(table, id):
     global database
     table, id, gets = str(table), str(id), []
     for test in TableGetRows(table):
+        output = []
         search = 'table'+':'+table+':'+test+':'+id+'\n'
         start = database.find(search)
         end = database.find('\nend', start+len(search))
         output = [database[start+len(search):end]]
         if start is not -1 and database.find(table+':'+'id'+':'+id+':hide') is -1: 
             gets.extend(output)
+        if start is not -1 and database.find(table+':'+'id'+':'+id+':hide') is not -1: 
+            gets.extend(['Null'])
     return gets
 connect('database.mmsql')
 execute('CREATE TABLE  mmsql ( isim:Text soyadi:Text )')
-#execute('INSERT INTO mmsql ROWS (isim, soyadi) NOT (isim)', 'python', 'lorke')
-#DELETE_ID_('mmsql', 10)
+execute('INSERT INTO mmsql ROWS (isim, soyadi) NOT (isim)', 'python', 'programlama')
+print(execute('SELECT * FROM mmsql SORT (AZ)'))
+DELETE_ID_('mmsql', 1)
 #print(GetColumn('mmsql', 2))
-print(execute('SELECT * FROM mmsql SORT(AZ)', 1, 2))
