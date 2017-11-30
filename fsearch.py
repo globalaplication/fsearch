@@ -122,5 +122,5 @@ def GetColumn(table, id):
             gets.extend(output)
     return gets
 connect('database.mmsql')
-execute('CREATE TABLE  school ( isim:Text soyadi:Text )')
+execute('CREATE TABLE  mmsql ( isim:Text soyadi:Text )')
 execute('INSERT INTO mmsql ROWS (isim, soyadi) NOT (isim)', 'c+', 'programlama')
