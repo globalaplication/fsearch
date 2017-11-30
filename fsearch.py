@@ -49,6 +49,7 @@ def execute(beta, *VALUES):
             print(table, 'tablo kayitli')
     if (command[0:2] == ['INSERT', 'INTO']):
         DatabaseGetCount = TableGetCount(table)
+       
         for insert in ROWS:
             if len(ROWS) is len(VALUES):
                 start  = 'table:' + table + ':' + insert + ':' + str(DatabaseGetCount+1)
@@ -72,6 +73,7 @@ def execute(beta, *VALUES):
             update()
         else:
             print('daha eskiden kaydedilmis data')
+
 def update():
     global n
     db = open(n, 'w')
@@ -101,7 +103,7 @@ def connect(beta):
     database, n = ('', beta)
     if os.path.lexists(beta) is False:
         with open(beta, 'w') as test:
-            test.write('table:mmsql:rows:test\ntable:mmsql:types:Text\ntable:mmsql:count:0\nend:info:table')
+            test.write('table:beta:rows:test\ntable:beta:types:Text\ntable:beta:count:0\nend:info:table')
     else:
         file = open(beta)
         database = file.read()
