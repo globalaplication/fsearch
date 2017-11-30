@@ -59,7 +59,9 @@ def execute(beta, *VALUES):
                 print('hatalı kullanım')
                 break
         if len(ROWS) is len(VALUES):
-            database = database.replace(table+':count:' + str(DatabaseGetCount), table+':count:' + str(DatabaseGetCount+1))
+            start = table +':count:' + str(DatabaseGetCount)
+            end = table +':count:' + str(DatabaseGetCount+1)
+            database = database.replace(start, end)
             update()
 def update():
     global n
@@ -90,7 +92,7 @@ def connect(beta):
     database, n = ('', beta)
     if os.path.lexists(beta) is False:
         with open(beta, 'w') as test:
-            test.write('table:mmsql:rows:ID\ntable:mmsql:types:id\ntable:mmsql:count:0\nend:info:table')
+            test.write('table:mmsql:rows:test\ntable:mmsql:types:Text\ntable:mmsql:count:0\nend:info:table')
     else:
         file = open(beta)
         database = file.read()
@@ -110,5 +112,5 @@ def GetColumn(table, id):
     return gets
 connect('database.mmsql')
 execute('CREATE TABLE  school ( isim:Text soyadi:Text )')
-#execute('INSERT INTO mmsql ROWS (isim, soyadi) ', 'python', 'programlama')
+execute('INSERT INTO mmsql ROWS (isim, soyadi) ', 'python', 'programlama')
 #print(GetColumn('mmsql', 1))
