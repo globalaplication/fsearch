@@ -1,68 +1,114 @@
 # -*- coding: utf-8 -*-
 #!/usr/bin/env python3
-def execute(beta):
-    global table, database 
-    command = beta.replace('(', ' ( ').replace(')', ' ) ')
-    command = command.split()
-    print(command)
+def execute(beta, *VALUES):
+    REpL = {'(':' ( ', ')':' ) ', 
+        'ROWS':' ROWS ', 
+        ',':'  '}
+    for keys in REpL.keys():
+        beta = beta.replace(keys, REpL[keys])
+    command = beta.split()
+    NOT, PNOT, ROWS, PROWS = [], [], [], []
+    global table
+    global database
+    if 'NOT' in command:
+        if (command[command.index('NOT')+1] == '('):
+            for FNOT in command[command.index('NOT')+1:]:
+                if FNOT is '(': continue
+                if FNOT is ')': break
+                PNOT.append(FNOT)
+            NOT.extend(PNOT)
+    if 'ROWS' in command:
+        if (command[command.index('ROWS')+1] == '('):
+            for FROWS in command[command.index('ROWS')+1:]:
+                if FROWS is '(': continue
+                if FROWS is ')': break
+                PROWS.append(FROWS)
+            ROWS.extend(PROWS)
+    if (command[0:2] == ['INSERT', 'INTO']):
+        table = command[2]
     if (command[0:2] == ['CREATE', 'TABLE']):
         table = command[2]
-        string, strnewrows, strnewtype  = ('table:'+table, '', '')
+    if (command[0:2] == ['CREATE', 'TABLE']):
+        string, strnewrows, strnewtypes  = ('table:' + table, '', '')
         if database.find(string+':') is -1:
-            for frowtype in command:
-                if (frowtype is '('):
-                    newrowtype = command[command.index(frowtype)+1:-1]
-            for fnewrows in newrowtype[0].split(':'):
-                strnewrows = strnewrows + fnewrows + ' '
-            for fnewtypes in newrowtype[1].split(':'):
-                strnewtype = strnewtype + fnewtypes + ' '
-            if len(database) is 0: end = 'end:info:table'
-            else: end = ''
+            for frowstypes in command:
+                if (frowstypes is '('):
+                    newrowstypes = command[command.index(frowstypes)+1:-1]
+            for index in range(0, len(newrowstypes)):
+                strnewrows = strnewrows + newrowstypes[index].split(':')[0] + ' '
+                strnewtypes = strnewtypes + newrowstypes[index].split(':')[1] + ' '
+            if len(database) is 0:
+                end = 'end:info:table'
+            elif len(database) > 0:
+                end = ''
             createnewrows = string+':rows:'+ strnewrows+'\n'
-            createnewtypes = string+':types:'+strnewtype+'\n'+string+':count:0'+'\n'+database
-            database = createnewrows+createnewtypes+end
+            createnewtypes = string+':types:'+strnewtypes+'\n'+string+':count:0'+'\n'+database
+            database = createnewrows + createnewtypes + end
+            update()
         else:
-            print('tablo kayıtlı')
-    update()
+            print(table, 'tablo kayitli')
+    if (command[0:2] == ['INSERT', 'INTO']):
+        DatabaseGetCount = TableGetCount(table)
+        table = 'table:' + table
+        for insert in ROWS:
+            if len(ROWS) is len(VALUES):
+                start  = table + ':' + insert + ':' + str(DatabaseGetCount+1)
+                end = VALUES[ROWS.index(insert)] + '\nend'
+                database = database + '\n' + start +'\n'+ end
+            else:
+                print('hatalı kullanım')
+                break
+        if len(ROWS) is len(VALUES):
+            database = database.replace(table+':count:' + str(DatabaseGetCount), table+':count:' + str(DatabaseGetCount+1))
+            update()
 def update():
+    global n
     db = open(n, 'w')
     db.write(database)
     db.close()
-def getTableCount(table):
-    table = str(table)
-    string = 'table:'+table
-    count = [count for count in getTableInfo if count.startswith(string+':count:') is True]
+def TableGetCount(table):
+    global getAllTable
+    string =  ('table:'+str(table))
+    count = [count for count in getAllTable if count.startswith(string+':count:')]
     if len(count) is not 0:
         return int(count[-1][len(string+':count:'):].split()[-1])
-def getRows(table):
-    table = str(table)
-    string = 'table:'+table
-    Rows = [Rows for Rows in getTableInfo if Rows.startswith(string+':rows:') is True]
+def TableGetRows(table):
+    global getAllTable
+    string = ('table:'+str(table))
+    Rows = [Rows for Rows in getAllTable if Rows.startswith(string+':rows:')]
     if len(Rows) is not 0:
-        return str(Rows[-1][len(string+':rows:'):].split()) #-1:0
-def getTypes(table):
-    table = str(table)
-    string = 'table:'+table
-    type = [type for type in getTableInfo if type.startswith(string+':types:') is True]
+        return Rows[-1][len(string+':rows:'):].split() #-1:0
+def TableGetTypes(table):
+    global getAllTable
+    string = ('table:'+str(table))
+    type = [type for type in getAllTable if type.startswith(string+':types:')]
     if len(type) is not 0:
         return str(type[-1][len(string+':types:'):].split())
 def connect(beta):
     import os
-    global getTableInfo
-    global database, n
-    n = beta
-    database = ''
-    if os.path.lexists(beta) is True:
+    global getAllTable, database, n
+    database, n = ('', beta)
+    if os.path.lexists(beta) is False:
+        with open(beta, 'w') as test:
+            test.write('table:mmsql:rows:ID\ntable:mmsql:types:id\ntable:mmsql:count:0\nend:info:table')
+    else:
         file = open(beta)
         database = file.read()
         file.close()
     if len(database) is not 0:
-       getTableInfo = database.split('\n')[0:database.split('\n').index('end:info:table')]
-
+       getAllTable = database.split('\n')[0:database.split('\n').index('end:info:table')]
+def GetColumn(table, id):
+    global database
+    table, id, gets = str(table), str(id), []
+    for test in TableGetRows(table):
+        search = 'table'+':'+table+':'+test+':'+id+'\n'
+        start = database.find(search)
+        end = database.find('\nend', start+len(search))
+        output = [database[start+len(search):end]]
+        if start is not -1:
+            gets.extend(output)
+    return gets
 connect('database.mmsql')
-#execute('CREATE TABLE database (isim:Text soyadi:Text)')
-
-
-#print(getRows('deneme'))
-#print(getTypes('deneme'))
-#print(getTableCount('deneme'))
+execute('CREATE TABLE  school ( isim:Text soyadi:Text )')
+#execute('INSERT INTO mmsql ROWS (isim, soyadi) ', 'python', 'programlama')
+#print(GetColumn('mmsql', 1))
