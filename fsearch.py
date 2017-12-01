@@ -50,13 +50,15 @@ def execute(beta, *VALUES):
                 end = 'end:info:table'
             elif len(database) > 0:
                 end = ''
-            createnewrows = string+':rows:'+ strnewrows+'\n'
-            createnewtypes = string+':types:'+strnewtypes+'\n'+string+':count:0'+'\n'+database
+            createnewrows = string+':rows:' + strnewrows+'\n'
+            createnewtypes = string+':types:'+ strnewtypes+'\n'+string+':count:0'+'\n'+database
             database = createnewrows + createnewtypes + end 
             update()
         else:
             print(table, 'tablo kayitli')
     if (command[0:2] == ['INSERT', 'INTO']):
+        print(table)
+        print(database, '********')
         DatabaseGetCount = TableGetCount(table)
         for insert in ROWS:
             if len(ROWS) is len(VALUES):
@@ -64,14 +66,14 @@ def execute(beta, *VALUES):
                 end = VALUES[ROWS.index(insert)] + '\nend'
                 database = database + '\n' + start +'\n'+ end
             else:
-                print('hatalı kullanım')
+                print('hatali kullanim')
                 break
         if len(ROWS) is len(VALUES):
             start = 'table:' + table +':count:' + str(DatabaseGetCount)
             end = 'table:' + table +':count:' + str(DatabaseGetCount+1)
             database = database.replace(start, end)
             if len(NOT) > 0 and NOT[0] not in ROWS:
-                print('hatalı kullanım', NOT, ROWS)
+                print('hatali kullanim', NOT, ROWS)
             else:
                 for id in range(1, TableGetCount(table)+1):
                     if len(NOT) > 0 and VALUES[ROWS.index(NOT[0])] in GetColumn(table, id)[ROWS.index(NOT[0])]:
@@ -79,7 +81,7 @@ def execute(beta, *VALUES):
         if (len(TFNOT) is 0):
             update()
         else:
-            print('daha eskiden kaydedilmis data')
+            print('kayitli!')
     if (command[0:3] == ['SELECT', '*', 'FROM']):
         if len(VALUES) is not 0:
             start, end = VALUES[0], VALUES[1]
@@ -103,8 +105,11 @@ def TableGetCount(table):
     global getAllTable
     string =  ('table:'+str(table))
     count = [count for count in getAllTable if count.startswith(string+':count:')]
+    print('count', count)
     if len(count) is not 0:
         return int(count[-1][len(string+':count:'):].split()[-1])
+    if len(count) is 0:
+        return 0
 def TableGetRows(table):
     global getAllTable
     string = ('table:'+str(table))
@@ -128,14 +133,13 @@ def connect(beta):
     global getAllTable, database, n
     database, n = ('', beta)
     if os.path.lexists(beta) is False:
-        with open(beta, 'w') as test:
-            test.write('table:beta:rows:test\ntable:beta:types:Text\ntable:beta:count:0\nend:info:table')
-    else:
+        with open(beta, 'w') as file:
+            file.write('table:beta:rows:test\ntable:beta:types:Text\ntable:beta:count:0\nend:info:table')
+    if os.path.lexists(beta) is True:
         file = open(beta)
         database = file.read()
         file.close()
-    if len(database) is not 0:
-       getAllTable = database.split('\n')[0:database.split('\n').index('end:info:table')]
+        getAllTable = database.split('\n')[0:database.split('\n').index('end:info:table')]
 def GetColumn(table, id):
     global database
     table, id, gets = str(table), str(id), []
@@ -149,10 +153,11 @@ def GetColumn(table, id):
             gets.extend(output)
         if start is not -1 and database.find(table+':'+'id'+':'+id+':hide') is not -1: 
             gets.extend(['Null'])
+    #gets.insert(0, int(id))
     return gets
 connect('database.mmsql')
 execute('CREATE TABLE  mmsql ( isim:Text soyadi:Text )')
-execute('INSERT INTO mmsql ROWS (isim, soyadi) NOT (isim)', 'python', 'programlama')
-print(execute('SELECT * FROM mmsql SORT (AZ)'))
-DELETE_ID_('mmsql', 1)
+execute('INSERT INTO mmsql ROWS ( isim, soyadi ) NOT (isim)',  'python', 'programlama')
+#print(execute('SELECT * FROM mmsql SORT (ZA)', 2, 5))
+#DELETE_ID_('mmsql', 4)
 #print(GetColumn('mmsql', 2))
